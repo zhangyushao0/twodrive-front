@@ -2,26 +2,24 @@ name: dev CI
 
 on:
   push:
-    branches: [ dev ]
+    branches: [dev]
   pull_request:
-    branches: [ dev ]
+    branches: [dev]
 
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    
-    - name: Build Docker image
-      run: docker build . --file Dockerfile --tag twodrive-front:$(date +%s)
-    
-    - name: Run Docker container
-      run: docker run -d -p 8080:80 twodrive-front:$(date +%s)
-    
-    - name: Test
-      run: |
-        docker ps -a
-        curl http://localhost:8080
+      - uses: actions/checkout@v3
+
+      - name: Build Docker image
+        run: docker build . --file Dockerfile --tag latest
+
+      - name: Run Docker container
+        run: docker run -d -p 8080:80 twodrive-front:latest
+
+      - name: Test
+        run: |
+          docker ps -a
+          curl http://localhost:8080
