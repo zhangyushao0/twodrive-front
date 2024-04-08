@@ -19,6 +19,9 @@ jobs:
       - name: Run Docker container
         run: docker run -d -p 8080:80 twodrive-front:latest
 
+      - name: wait for container to start
+        run: sleep 10
+
       - name: Test
         run: |
           docker ps -a
