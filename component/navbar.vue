@@ -1,7 +1,7 @@
 <template>
     <aside class="sidebar">
       <ul class="nav">
-        <li><router-link to="/main">+新增</router-link></li>
+        <li style="background-color: green;"><router-link to="/main" style="color: aliceblue;">+新增</router-link></li>
         <hr class="file-divider"> <!-- 添加横杠 -->
         <li><router-link to="/main">主页</router-link></li>
         <hr class="file-divider"> <!-- 添加横杠 -->
