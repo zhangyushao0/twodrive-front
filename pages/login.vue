@@ -41,7 +41,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
             <UInput v-model="state.password" type="password" />
           </UFormGroup>
           <div class="flex justify-between">
-            <UButton type="submit"> 登录 </UButton>
+            <UButton type="submit" to="/main"> 登录 </UButton>
             <ULink to="/forgot-password" class="text-gray-400"
               >忘记密码？</ULink
             >
