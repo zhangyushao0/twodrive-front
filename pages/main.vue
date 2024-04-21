@@ -185,6 +185,7 @@ import { defineComponent, ref } from "vue";
 import Navbar from "../component/navbar.vue"; 
 
 export default defineComponent({
+
   name: 'App',
   components: {
     FileList,
@@ -201,6 +202,8 @@ export default defineComponent({
   };
 }
 });
+  }
+}
 </script>
 
 <style>
