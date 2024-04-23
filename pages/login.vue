@@ -3,8 +3,8 @@ import { z } from "zod";
 import type { FormSubmitEvent } from "#ui/types";
 
 const schema = z.object({
-  email: z.string().email("Invalid email"),
-  password: z.string().min(8, "Must be at least 8 characters"),
+  email: z.string().email("无效的邮箱地址"),
+  password: z.string().min(8, "密码至少需要8个字符"),
 });
 
 type Schema = z.output<typeof schema>;
@@ -41,7 +41,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
             <UInput v-model="state.password" type="password" />
           </UFormGroup>
           <div class="flex justify-between">
-            <UButton type="submit"> 登录 </UButton>
+            <UButton type="submit" to="/main"> 登录 </UButton>
             <ULink to="/forgot-password" class="text-gray-400"
               >忘记密码？</ULink
             >
