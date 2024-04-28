@@ -5,19 +5,19 @@
 
     <h1 class="title">我的文件</h1>
     <hr class="file-divider"> <!-- 添加横杠 -->
-  
-    <UTable  :rows="files" :columns="columns">
-      <template #name-data="{ row }">
-        <span :class="[selected.find(person => person.id === row.id) && 'text-primary-500 dark:text-primary-400']">{{ row.name }}</span>
-      </template>
-  
-      <template #actions-data="{ row }">
-        <UDropdown :items="items(row)">
-          <UButton color="gray" variant="ghost" icon="i-heroicons-ellipsis-horizontal-20-solid" />
-        </UDropdown>
-      </template>
-    </UTable>
-  
+   
+      <UTable  :rows="files" :columns="columns">
+        <template #name-data="{ row }">
+          <span :class="[selected.find(person => person.id === row.id) && 'text-primary-500 dark:text-primary-400']">{{ row.name }}</span>
+        </template>
+    
+        <template #actions-data="{ row }">
+          <UDropdown :items="items(row)">
+            <UButton color="gray" variant="ghost" icon="i-heroicons-ellipsis-horizontal-20-solid" />
+          </UDropdown>
+        </template>
+      </UTable>
+
 
   <UModal v-model="isOpen" prevent-close>
     <UCard :ui="{ ring: '', divide: 'divide-y divide-gray-100 dark:divide-gray-800' }">
@@ -102,6 +102,7 @@ const columns = [
 
 const files = [
   {
+    id: 1,
     name: 'Document1.docx',
     modifiedTime: '2024-04-10',
     modifier: 'Alice',
@@ -110,6 +111,7 @@ const files = [
     content: 'This is the content of Document1.docx'
   },
   {
+    id: 2,
     name: 'Report.pdf',
     modifiedTime: '2024-04-15',
     modifier: 'Bob',
@@ -118,6 +120,7 @@ const files = [
     content: 'This is the content of Report.pdf'
   },
   {
+    id: 3,
     name: 'Presentation.pptx',
     modifiedTime: '2024-04-12',
     modifier: 'Charlie',
@@ -126,6 +129,7 @@ const files = [
     content: 'This is the content of Presentation.pptx'
   },
   {
+    id: 4,
     name: 'CodeSnippet.js',
     modifiedTime: '2024-04-14',
     modifier: 'David',
@@ -134,6 +138,7 @@ const files = [
     content: 'This is the content of CodeSnippet.js'
   },
   {
+    id: 5,
     name: 'Image.jpg',
     modifiedTime: '2024-04-11',
     modifier: 'Emily',
@@ -142,6 +147,7 @@ const files = [
     content: 'This is the content of Image.jpg'
   },
   {
+    id: 6,
     name: 'Spreadsheet.xlsx',
     modifiedTime: '2024-04-13',
     modifier: 'Frank',
@@ -149,9 +155,8 @@ const files = [
     shared: 'No',
     content: 'This is the content of Spreadsheet.xlsx'
   }
-];
-
-const items = (row) => [
+]
+const items = (row: any) => [
   [{
     label: '收藏',
     icon: 'i-heroicons-star-16-solid',
@@ -171,18 +176,16 @@ const items = (row) => [
     label: '删除',
     icon: 'i-heroicons-trash-20-solid'
   }]
-]
+];
 
 const selected = ref([files[1]])
 </script>
 
-
 <script lang="ts">
-
-
-import { defineComponent, ref } from "vue";
-// import FileList from "../component/FileList.vue"; 
-import Navbar from "../component/navbar.vue"; 
+import { defineComponent } from "vue";
+import axios from "axios";
+// import FileList from "../component/FileList.vue";
+import Navbar from "../component/navbar.vue";
 
 export default defineComponent({
 
@@ -192,18 +195,33 @@ export default defineComponent({
     Navbar
   },
   data() {
-  return {
-    isOpen: true, // 控制模态框显示与隐藏的变量
-    fileType: '文本文件',
-    filePath: '/documents/example.txt',
-    fileSize: '256 KB',
-    modificationDate: '2024-04-22',
-    sharingStatus: '私有'
-  };
-}
-});
+    return {
+      isOpen: true, // 控制模态框显示与隐藏的变量
+      fileType: '文本文件',
+      filePath: '/documents/example.txt',
+      fileSize: '256 KB',
+      modificationDate: '2024-04-22',
+      sharingStatus: '私有'
+    }
+  },
+  methods: {
+    Upload(event: any) {
+      const file = event.target.files[0];
+      // 在这里进行一系列的校验
+      const formData = new FormData();
+      formData.append("上传的key值", file);
+     axios.post('上传Url', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+      }).then(res => {
+        // 上传成功后的处理
+      }, err => {
+        // 出现错误时的处理
+      });
+      }
   }
-}
+});
 </script>
 
 <style>
