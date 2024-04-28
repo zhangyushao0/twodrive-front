@@ -13,12 +13,12 @@ RUN npm install
 # 复制项目文件到工作目录
 COPY . .
 
-# 构建 Nuxt 应用
-RUN npm run build
+# # 构建 Nuxt 应用
+# RUN npm run dev
 
-# 设置环境变量
-ENV HOST 0.0.0.0
-ENV PORT 80
+# # 设置环境变量
+# ENV HOST 0.0.0.0
+# ENV PORT 80
 
 # 启动 Nuxt 应用
-CMD ["node", ".output/server/index.mjs"]
+CMD ["npm", "run", "dev"]

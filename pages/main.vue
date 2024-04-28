@@ -1,7 +1,10 @@
 <template>
   <div id="app">
-    <Navbar/>
+    <Navbar />
     <div class="content">
+      <h1 class="title">我的文件</h1>
+      <hr class="file-divider" />
+      <!-- 添加横杠 -->
 
     <h1 class="title">我的文件</h1>
     <hr class="file-divider"> <!-- 添加横杠 -->
@@ -19,51 +22,76 @@
       </UTable>
 
 
-  <UModal v-model="isOpen" prevent-close>
-    <UCard :ui="{ ring: '', divide: 'divide-y divide-gray-100 dark:divide-gray-800' }">
-      <template #header>
-        <div class="flex items-center justify-between">
-          <h3 class="text-base font-semibold leading-6 text-gray-900 dark:text-white">
-            文件信息
-          </h3>
-          <UButton color="gray" variant="ghost" icon="i-heroicons-x-mark-20-solid" class="-my-1" @click="isOpen = false" />
-        </div>
-      </template>
-  
-      <!-- 表格部分 -->
-      <table class="min-w-full">
-        <tbody>
-          <tr>
-            <td class="px-4 py-2 text-left font-semibold">类型：</td>
-            <td class="px-4 py-2 text-left">{{ fileType }}</td>
-          </tr>
-          <tr>
-            <td class="px-4 py-2 text-left font-semibold">路径：</td>
-            <td class="px-4 py-2 text-left">{{ filePath }}</td>
-          </tr>
-          <tr>
-            <td class="px-4 py-2 text-left font-semibold">大小：</td>
-            <td class="px-4 py-2 text-left">{{ fileSize }}</td>
-          </tr>
-          <tr>
-            <td class="px-4 py-2 text-left font-semibold">修改日期：</td>
-            <td class="px-4 py-2 text-left">{{ modificationDate }}</td>
-          </tr>
-          <tr>
-            <td class="px-4 py-2 text-left font-semibold">共享状态：</td>
-            <td class="px-4 py-2 text-left">{{ sharingStatus }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </UCard>
-  </UModal>
 
-  <!-- <FileList/> -->
+        <template #actions-data="{ row }">
+          <UDropdown :items="items(row)">
+            <UButton
+              color="gray"
+              variant="ghost"
+              icon="i-heroicons-ellipsis-horizontal-20-solid"
+            />
+          </UDropdown>
+        </template>
+      </UTable>
+
+      <UModal v-model="isOpen" prevent-close>
+        <UCard
+          :ui="{
+            ring: '',
+            divide: 'divide-y divide-gray-100 dark:divide-gray-800',
+          }"
+        >
+          <template #header>
+            <div class="flex items-center justify-between">
+              <h3
+                class="text-base font-semibold leading-6 text-gray-900 dark:text-white"
+              >
+                文件信息
+              </h3>
+              <UButton
+                color="gray"
+                variant="ghost"
+                icon="i-heroicons-x-mark-20-solid"
+                class="-my-1"
+                @click="isOpen = false"
+              />
+            </div>
+          </template>
+
+          <!-- 表格部分 -->
+          <table class="min-w-full">
+            <tbody>
+              <tr>
+                <td class="px-4 py-2 text-left font-semibold">类型：</td>
+                <td class="px-4 py-2 text-left">{{ fileType }}</td>
+              </tr>
+              <tr>
+                <td class="px-4 py-2 text-left font-semibold">路径：</td>
+                <td class="px-4 py-2 text-left">{{ filePath }}</td>
+              </tr>
+              <tr>
+                <td class="px-4 py-2 text-left font-semibold">大小：</td>
+                <td class="px-4 py-2 text-left">{{ fileSize }}</td>
+              </tr>
+              <tr>
+                <td class="px-4 py-2 text-left font-semibold">修改日期：</td>
+                <td class="px-4 py-2 text-left">{{ modificationDate }}</td>
+              </tr>
+              <tr>
+                <td class="px-4 py-2 text-left font-semibold">共享状态：</td>
+                <td class="px-4 py-2 text-left">{{ sharingStatus }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </UCard>
+      </UModal>
+
+      <!-- <FileList/> -->
+    </div>
   </div>
-</div>
 </template>
 <script setup lang="ts">
-const isOpen = ref(false)
+const isOpen = ref(false);
 const openModal = () => {
   isOpen.value = true;
 };
@@ -72,33 +100,37 @@ defineShortcuts({
   escape: {
     usingInput: true,
     whenever: [isOpen],
-    handler: () => { isOpen.value = false }
-  }
-})
+    handler: () => {
+      isOpen.value = false;
+    },
+  },
+});
 
 const columns = [
   {
-    key: 'name',
-    label: 'File Name'
+    key: "name",
+    label: "File Name",
   },
   {
-    key: 'modifiedTime',
-    label: 'Modified Time'
+    key: "modifiedTime",
+    label: "Modified Time",
   },
   {
-    key: 'modifier',
-    label: 'Modifier'
+    key: "modifier",
+    label: "Modifier",
   },
   {
-    key: 'size',
-    label: 'Size'
+    key: "size",
+    label: "Size",
   },
   {
-    key: 'shared',
-    label: 'Shared'
-  }, {
-  key: 'actions'
-}]
+    key: "shared",
+    label: "Shared",
+  },
+  {
+    key: "actions",
+  },
+];
 
 const files = [
   {
@@ -176,9 +208,10 @@ const items = (row: any) => [
     label: '删除',
     icon: 'i-heroicons-trash-20-solid'
   }]
+
 ];
 
-const selected = ref([files[1]])
+const selected = ref([files[1]]);
 </script>
 
 <script lang="ts">
@@ -188,11 +221,10 @@ import axios from "axios";
 import Navbar from "../component/navbar.vue";
 
 export default defineComponent({
-
-  name: 'App',
+  name: "App",
   components: {
     FileList,
-    Navbar
+    Navbar,
   },
   data() {
     return {
@@ -221,14 +253,15 @@ export default defineComponent({
       });
       }
   }
+
 });
 </script>
 
 <style>
-.title{
-    font-size: 36px; /* 调整标题大小根据需要 */
-    margin-left: 20px; /* 将标题移到页面左侧 */  
-} 
+.title {
+  font-size: 36px; /* 调整标题大小根据需要 */
+  margin-left: 20px; /* 将标题移到页面左侧 */
+}
 .content {
   margin-left: 220px; /* 给导航栏留出空间 */
   padding: 20px;
