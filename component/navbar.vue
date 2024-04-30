@@ -1,12 +1,12 @@
 <template>
     <aside class="sidebar">
       <ul class="nav">
-        <li style="background-color: green;"><router-link style="color: white;" to="/main" >+新增</router-link></li>
+        <li style="background-color: green; cursor: pointer;" @click="openFileInput">+新增</li>
 
         <hr class="file-divider"> <!-- 添加横杠 -->
         <li><router-link to="/main">主页</router-link></li>
         <hr class="file-divider"> <!-- 添加横杠 -->
-        <li><router-link to="/page2">我的文件</router-link></li>
+        <li><router-link to="/main">我的文件</router-link></li>
         <hr class="file-divider"> <!-- 添加横杠 -->
         <li><router-link to="/page3">已共享</router-link></li>
         <hr class="file-divider"> <!-- 添加横杠 -->
@@ -17,12 +17,48 @@
         <li><router-link to="/page3">最近</router-link></li>
         <!-- 添加更多页面链接 -->
       </ul>
-    </aside>
+    <input ref="fileInput" type="file" @change="handleFileUpload" style="display: none;">
+    <button @click="uploadFile" :disabled="!selectedFile">上传文件</button>
+  </aside>
   </template>
   
   <script>
+import axios from 'axios';
   export default {
-    name: 'Navbar'
+    name: 'Navbar',
+    data() {
+    return {
+      selectedFile: null
+    };
+  },
+  methods: {
+    openFileInput() {
+      this.$refs.fileInput.click();
+    },
+    handleFileUpload(event) {
+      this.selectedFile = event.target.files[0];
+    
+      if (!this.selectedFile) {
+        alert('请先选择要上传的文件');
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('file', this.selectedFile);
+
+      axios.post('/api/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }).then(response => {
+        console.log('文件上传成功', response.data);
+        // 在上传成功后的逻辑处理
+      }).catch(error => {
+        console.error('文件上传失败', error);
+        // 在上传失败后的逻辑处理
+      });
+    }
+  }
   }
   </script>
   
