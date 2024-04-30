@@ -16,15 +16,47 @@ const schema = z.object({
 type Schema = z.output<typeof schema>;
 
 const state = reactive({
-  username: undefined,
-  email: undefined,
-  password: undefined,
-  confirmPassword: undefined,
+  username: '',
+  email: '',
+  password: '',
+  confirmPassword: '',
 });
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-  // 处理注册逻辑
-  console.log(event.data);
+  try {
+    const { username, email, password } = state;
+    const data = await registerUser(email, username, password);
+
+    if (data.error_code === 0) {
+      // 注册成功 路由跳转
+      const router = useRouter();
+      router.push("/login");
+    } else {
+      // 注册失败
+      console.log("注册失败");
+      console.log(data);
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+type registerResponse = {
+  error_code: number;
+  msg: string;
+};
+
+async function registerUser(email: string, username: string, password: string) {
+  const response = await fetch("http://localhost:3000/register", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ email, username, password }),
+  });
+
+  const data: registerResponse = await response.json();
+  return data;
 }
 </script>
 
