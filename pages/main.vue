@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Navbar />
+    <!-- <Navbar  56 -->
     <div class="content">
       <h1 class="title">我的文件</h1>
       <hr class="file-divider" />
@@ -22,7 +22,7 @@
       </UTable>
 
 
-
+      <UTable :rows="files" :columns="columns">
         <template #actions-data="{ row }">
           <UDropdown :items="items(row)">
             <UButton

@@ -7,10 +7,12 @@ const links = [ {
   id: 'home',
   label: '主页',
   icon: 'i-heroicons-home',
+  to: '/main',
 }, {
   id: 'file',
   label: '我的文件',
   icon: 'i-heroicons-folder',
+  to: '/main',
 }, {
   id: 'shared',
   label: '已共享',
