@@ -17,7 +17,7 @@ const state = reactive({
 });
 
 type loginResponse = {
-  error_code: number;
+  code: string;
   token: string;
   msg: string;
   data: {
@@ -38,8 +38,9 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 
     const loginInformation = useState("loginInformation");
     loginInformation.value = data;
-    if (data.error_code === 0) {
+    if (data.code === "0") {
       // 登录成功 路由跳转
+
       const router = useRouter();
       router.push("/main");
       
@@ -60,15 +61,26 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 }
 
 async function loginUser(email: string, username: string, password: string) {
-  const response = await fetch("http://localhost:3000/login", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ email, username, password }),
-  });
-  const data: loginResponse = await response.json();
-  return data;
+  try {
+    // 创建一个 FormData 对象
+    const formData = new FormData();
+    formData.append('email', email);
+    formData.append('username', username);
+    formData.append('password', password);
+
+    // 发送请求
+    const response = await fetch("http://192.168.137.1:8080/user/login", {
+      method: "POST",
+      body: formData,
+    });
+
+    // 解析响应
+    const data: loginResponse = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 }
 </script>
 
