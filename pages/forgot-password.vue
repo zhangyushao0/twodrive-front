@@ -33,7 +33,7 @@ async function onSubmitSendCode(event: FormSubmitEvent<Schema>) {
     const { email } = state;
     const data = await sendCode(email);
 
-    if (data.error_code === 0) {
+    if (data.code === "0") {
       // 发送验证码成功
       console.log("发送验证码成功");
       token.value = data.token;
@@ -53,23 +53,15 @@ async function onSubmitVerifyCodeAndResetPassword(event: FormSubmitEvent<Schema>
     const { code } = state_code;
     const data = await verifyCode(code, token.value);
 
-    if (data.error_code === 0) {
+    if (data.code === "0") {
       // 验证码验证成功
       console.log("验证码验证成功");
-    } else {
-      // 验证码验证失败
-      console.log("验证码验证失败");
       console.log(data);
-    }
-  } catch (error) {
-    console.error(error);
-  }
-
-  try {
+      try {
     const { password } = state_password;
     const data = await modifyPassword(token.value, password);
 
-    if (data.error_code === 0) {
+    if (data.code === "0") {
       // 重置密码成功
       console.log("重置密码成功");
     } else {
@@ -80,56 +72,103 @@ async function onSubmitVerifyCodeAndResetPassword(event: FormSubmitEvent<Schema>
   } catch (error) {
     console.error(error);
   }
+    } else {
+      // 验证码验证失败
+      console.log("验证码验证失败");
+      console.log(data);
+    }
+  } catch (error) {
+    console.error(error);
+  }
+
 }
 
 type sendCodeResponse = {
-  error_code: number;
+  code: string;
   msg: string;
   token: string;
 };
 
 type resetPasswordResponse = {
-  error_code: number;
+  code: string;
   msg: string;
 };
 
 async function sendCode(email: string) {
-  const response = await fetch("http://localhost:3000/sendCode", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ email }),
-  });
+  try {
+    // 创建一个 FormData 对象
+    const formData = new FormData();
+    formData.append('email', email);
 
-  const data: sendCodeResponse = await response.json();
-  return data;
+    // 发送请求
+    const response = await fetch("http://192.168.137.1:8080/user/send-code", {
+      method: "POST",
+      body: formData,  // 直接传递 FormData 对象
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data: sendCodeResponse = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Failed to send code:', error);
+    throw error;
+  }
+
 }
 
 async function modifyPassword(token: string, password: string) {
-  const response = await fetch("http://localhost:3000/modifyPassword", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ token, password }),
-  });
+  console.log(token, password);
+  try {
+    // 创建一个 FormData 对象
+    const formData = new FormData();
+    formData.append('token', token);
+    formData.append('newPassword', password);
 
-  const data: resetPasswordResponse = await response.json();
-  return data;
+    // 发送请求
+    const response = await fetch("http://192.168.137.1:8080/user/modify", {
+      method: "POST",
+      body: formData,  // 直接传递 FormData 对象
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data: resetPasswordResponse = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Failed to modify password:', error);
+    throw error;
+  }
 }
 
 async function verifyCode(code: string, token: string) {
-  const response = await fetch("http://localhost:3000/verifyCode", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ code, token }),
-  });
+  console.log(code, token);
+  try {
+    // 创建一个 FormData 对象
+    const formData = new FormData();
+    formData.append('code', code);
+    formData.append('token', token);
 
-  const data: resetPasswordResponse = await response.json();
-  return data;
+    // 发送请求
+    const response = await fetch("http://192.168.137.1:8080/user/verify-code", {
+      method: "POST",
+      body: formData,  // 直接传递 FormData 对象
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data: resetPasswordResponse = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Failed to verify code:', error);
+    throw error;
+  }
 }
 </script>
 
